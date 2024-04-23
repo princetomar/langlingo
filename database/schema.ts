@@ -5,6 +5,7 @@ import {
   serial,
   text,
   boolean,
+  timestamp,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -57,7 +58,7 @@ export const lessonRelations = relations(lessons, ({ one, many }) => ({
 }));
 
 // Challenges type
-export const challangesEnum = pgEnum("type", ["SELECT", "ASSIST "]);
+export const challengesEnum = pgEnum("type", ["SELECT", "ASSIST"]);
 
 // Challenges for lesson
 export const challenges = pgTable("challenges", {
@@ -65,8 +66,7 @@ export const challenges = pgTable("challenges", {
   lessonId: integer("lesson_id")
     .references(() => lessons.id, { onDelete: "cascade" })
     .notNull(),
-  // Type of challenge from enum challangesEnum
-  type: challangesEnum("type").notNull(),
+  type: challengesEnum("type").notNull(), // Using the enum type here
   question: text("question").notNull(),
   order: integer("order").notNull(),
 });
@@ -85,7 +85,6 @@ export const challengeOptions = pgTable("challenge_options", {
   challengeId: integer("challenges_id")
     .references(() => challenges.id, { onDelete: "cascade" })
     .notNull(),
-  // Type of challenge from enum challangesEnum
   text: text("text").notNull(),
   correct: boolean("correct").notNull(),
   imageSrc: text("image_src"),
@@ -139,3 +138,12 @@ export const userProgressRelations = relations(userProgress, ({ one }) => ({
     references: [courses.id],
   }),
 }));
+
+export const userSubscription = pgTable("user_subscription", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().unique(),
+  stripeCustomerID: text("stripe_customer_id").notNull().unique(),
+  stringSubscriptionID: text("stripe_subscription_id").notNull().unique(),
+  stripePriceID: text("stripe_price_id").notNull(),
+  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
+});

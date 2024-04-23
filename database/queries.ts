@@ -10,6 +10,7 @@ import {
   lessons,
   units,
   userProgress,
+  userSubscription,
 } from "@/database/schema";
 
 // Query to get the current userProgress
@@ -213,4 +214,29 @@ export const getLessonPercentage = cache(async () => {
   );
 
   return percentage;
+});
+
+// get user subscription
+
+const DAY_IN_MS = 86_400_000;
+
+export const getUserSubscription = cache(async () => {
+  const { userId } = await auth();
+  if (!userId) return null;
+
+  const data = await db.query.userSubscription.findFirst({
+    where: eq(userSubscription.userId, userId),
+  });
+
+  if (!data) return null;
+
+  const isActive =
+    data.stripePriceID &&
+    data.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
+
+  // subscription has expired
+  return {
+    ...data,
+    isActive: !!isActive,
+  };
 });
