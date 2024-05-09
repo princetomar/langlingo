@@ -19,9 +19,9 @@ export const createStripeURL = async () => {
 
   // if we aleady have a user subscription, or we have a stripe customerid
   // that means, instead of returning a checkout url -> we return a checkout portal url
-  if (userSubscription && userSubscription.stripeCustomerID) {
+  if (userSubscription && userSubscription.stripeCustomerId) {
     const stripeSession = await stripe.billingPortal.sessions.create({
-      customer: userSubscription.stripeCustomerID,
+      customer: userSubscription.stripeCustomerId,
       return_url: returnURL,
     });
 

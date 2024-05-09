@@ -71,7 +71,7 @@ const Page = ({ hearts, points, hasActiveSubscription }: PageProps) => {
           </p>
         </div>
         <Button disabled={pending || hasActiveSubscription} onClick={onUpgrade}>
-          {hasActiveSubscription ? "active" : "upgrade"}
+          {hasActiveSubscription ? "settings" : "upgrade"}
         </Button>
       </div>
     </ul>

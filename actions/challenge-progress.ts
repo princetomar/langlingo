@@ -5,7 +5,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import db from "@/database/drizzle";
-import { getUserProgress } from "@/database/queries";
+import { getUserProgress, getUserSubscription } from "@/database/queries";
 import { challengeProgress, challenges, userProgress } from "@/database/schema";
 
 export const upsertChallengeProgress = async (challengeId: number) => {
@@ -16,6 +16,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   }
 
   const currentUserProgress = await getUserProgress();
+  const userSubscription = await getUserSubscription();
   // TODO: Handle subscription query later
 
   if (!currentUserProgress) {
@@ -41,8 +42,11 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 
   const isPractice = !!existingChallengeProgress;
 
-  // TODO: Not if user has a subscription
-  if (currentUserProgress.hearts === 0 && !isPractice) {
+  if (
+    currentUserProgress.hearts === 0 &&
+    !isPractice &&
+    !userSubscription?.isActive
+  ) {
     return { error: "hearts" };
   }
 
