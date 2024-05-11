@@ -5,6 +5,7 @@ import { getUserProgress, getUserSubscription } from "@/database/queries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import Items from "./items";
+import Promo from "@/components/promo";
 
 type ShopPageProps = {};
 
@@ -26,6 +27,7 @@ const ShopPage = async ({}: ShopPageProps) => {
   return (
     <div className=" flex flex-row-reverse gap-[48px] px-6 ">
       <StickyWrapper>
+        {!isProUser && <Promo />}
         <UserProgress
           activeCourse={userProgress.activeCourse}
           hearts={userProgress.hearts}

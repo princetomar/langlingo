@@ -1,3 +1,4 @@
+import Promo from "@/components/promo";
 import { FeedWrapper } from "@/components/shared/feed-wrapper";
 import { StickyWrapper } from "@/components/shared/sticky-wrapper";
 import { UserProgress } from "@/components/shared/user-progress";
@@ -37,6 +38,7 @@ const QuestsPage = async ({}: QuestsPageProps) => {
   return (
     <div className=" flex flex-row-reverse gap-[48px] px-6 ">
       <StickyWrapper>
+        {!isProUser && <Promo />}
         <UserProgress
           activeCourse={userProgress.activeCourse}
           hearts={userProgress.hearts}
