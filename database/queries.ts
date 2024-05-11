@@ -92,6 +92,17 @@ export const getCourses = cache(async () => {
 export const getCourseById = cache(async (courseId: number) => {
   const data = await db.query.courses.findFirst({
     where: eq(courses.id, courseId),
+    // populate the units and lessons
+    with: {
+      units: {
+        orderBy: (units, { asc }) => [asc(units.order)],
+        with: {
+          lessons: {
+            orderBy: (lessons, { asc }) => [asc(lessons.order)],
+          },
+        },
+      },
+    },
   });
 
   return data;
@@ -231,7 +242,7 @@ export const getUserSubscription = cache(async () => {
   if (!data) return null;
 
   const isActive =
-    data.stripePriceID &&
+    data.stripePriceId &&
     data.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
 
   // subscription has expired
@@ -239,4 +250,28 @@ export const getUserSubscription = cache(async () => {
     ...data,
     isActive: !!isActive,
   };
+});
+
+// FOR LEADER BOARD
+// 1. method to get the top 10 users from the db
+export const getTopTenUsers = cache(async () => {
+  // first check the user making the request, is authenticated or not
+  const { userId } = await auth();
+
+  if (!userId) {
+    return [];
+  }
+
+  const data = db.query.userProgress.findMany({
+    orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
+    limit: 10,
+    columns: {
+      userId: true,
+      userName: true,
+      userImageSrc: true,
+      points: true,
+    },
+  });
+
+  return data;
 });
