@@ -14,7 +14,8 @@ import {
 import { redirect } from "next/navigation";
 import { Unit } from "./unit";
 import { lessons, units as unitsSchema } from "@/database/schema";
-import Promo from "@/components/promo";
+import Promo from "@/components/ui/promo";
+import Quests from "@/components/ui/quests";
 
 const LearnPage = async () => {
   //  GET THE USER PROGRESS DATA
@@ -53,6 +54,7 @@ const LearnPage = async () => {
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickyWrapper>
         {!isProUser && <Promo />}
+        <Quests points={userProgress.points} />
         <UserProgress
           activeCourse={userProgress.activeCourse}
           hearts={userProgress.hearts}

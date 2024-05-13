@@ -5,7 +5,7 @@ import { getUserProgress, getUserSubscription } from "@/database/queries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import Items from "./items";
-import Promo from "@/components/promo";
+import Promo from "@/components/ui/promo";
 
 type ShopPageProps = {};
 

@@ -1,4 +1,4 @@
-import Promo from "@/components/promo";
+import Promo from "@/components/ui/promo";
 import { FeedWrapper } from "@/components/shared/feed-wrapper";
 import { StickyWrapper } from "@/components/shared/sticky-wrapper";
 import { UserProgress } from "@/components/shared/user-progress";
@@ -11,6 +11,7 @@ import {
 } from "@/database/queries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import Quests from "@/components/ui/quests";
 
 type LeaderBoardPageProps = {};
 
@@ -42,6 +43,7 @@ const LeaderBoardPage = async ({}: LeaderBoardPageProps) => {
           points={userProgress.points}
           hasActiveSubscription={isProUser}
         />
+        <Quests points={userProgress.points} />
       </StickyWrapper>
 
       <FeedWrapper>
